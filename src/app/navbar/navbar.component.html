@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+  
+      <div class="navbar-header">
+ 
+        <a *ngIf="!isLoggedIn"
+           class="navbar-brand"
+           routerLink="">Let's Get Lunch</a>
+        <a *ngIf="isLoggedIn"
+           class="navbar-brand"
+           routerLink="/dashboard">Let's Get Lunch</a>
+      </div><!--navbar-header-->
+  
+      <div id="lgl-navbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li *ngIf="!isLoggedIn">
+            <a class="nav-link" data-test="signup" routerLink="/signup">Signup</a>
+          </li>
+          <!-- <li *ngIf="!isLoggedIn">
+            <a data-test="login" routerLink="/login">Login</a>
+          </li> -->
+  
+          <li *ngIf="isLoggedIn">
+            <a class="nav-link" data-test="logout" routerLink="" (click)="logout()">Logout</a>
+          </li>
+        </ul>
+      </div><!--navbar-collapse-->
+  
+    </div>
+  </nav>
+  
