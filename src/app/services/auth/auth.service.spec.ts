@@ -88,10 +88,12 @@ describe('AuthService', () => {
       authService.login(user).subscribe(res => {
         response = res;
       });
+      spyOn(authService.loggedIn, 'emit');
 
       http.expectOne('http://localhost:8080/api/sessions').flush(loginResponse);
       expect(response).toEqual(loginResponse);
       expect(localStorage.getItem('Authorization')).toEqual('s3cr3tt0ken');
+      expect(authService.loggedIn.emit).toHaveBeenCalled();
       http.verify();
     });
   });
@@ -106,6 +108,20 @@ describe('AuthService', () => {
     it('should return false if the user is not logged in', () => {
       localStorage.removeItem('Authorization');
       expect(authService.isLoggedIn()).toEqual(false);
+    });
+  });
+
+  describe('logout', () => {
+    it('should clear the token from local storage', () => {
+      spyOn(authService.loggedIn, 'emit');
+
+      localStorage.setItem('Authorization', 's3cr3tt0k3n');
+      expect(localStorage.getItem('Authorization')).toEqual('s3cr3tt0k3n');
+
+      authService.logout();
+
+      expect(localStorage.getItem('Authorization')).toBeFalsy();
+      expect(authService.loggedIn.emit).toHaveBeenCalledWith(false);
     });
   });
 
