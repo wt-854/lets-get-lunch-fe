@@ -16,9 +16,9 @@
           <li *ngIf="!isLoggedIn">
             <a class="nav-link" data-test="signup" routerLink="/signup">Signup</a>
           </li>
-          <!-- <li *ngIf="!isLoggedIn">
+          <li *ngIf="!isLoggedIn">
             <a data-test="login" routerLink="/login">Login</a>
-          </li> -->
+          </li>
   
           <li *ngIf="isLoggedIn">
             <a class="nav-link" data-test="logout" routerLink="" (click)="logout()">Logout</a>
