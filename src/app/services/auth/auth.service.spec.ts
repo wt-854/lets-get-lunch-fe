@@ -15,6 +15,7 @@ function tokenGetter() {
 describe('AuthService', () => {
   let authService: AuthService;
   let http: HttpTestingController;
+  let jwtHelper: JwtHelperService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -31,6 +32,7 @@ describe('AuthService', () => {
 
     authService = TestBed.get(AuthService);
     http = TestBed.get(HttpTestingController);
+    jwtHelper = TestBed.get(JwtHelperService);
   });
 
   it('should be created', () => {
@@ -122,6 +124,25 @@ describe('AuthService', () => {
 
       expect(localStorage.getItem('Authorization')).toBeFalsy();
       expect(authService.loggedIn.emit).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('currentUser', () => {
+    it('should return a user object with a valid token', () => {
+      spyOn(localStorage, 'getItem').and.callFake(() => 's3cr3tt0ken');
+      spyOn(jwtHelper, 'decodeToken').and.callFake(() => {
+        return {
+          exp: 1517847480,
+          iat: 1517840280,
+          username: 'username',
+          _id: '5a6f41c94000495518d2673f'
+        };
+      });
+      const res = authService.currentUser();
+
+      expect(localStorage.getItem).toHaveBeenCalled();
+      expect(res.username).toBeDefined();
+      expect(res._id).toBeDefined();
     });
   });
 
