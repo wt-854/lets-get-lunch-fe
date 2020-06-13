@@ -857,3 +857,7 @@
   .comments-list{
     max-height: 300px;
     overflow-y: scroll;}
+
+  .member-list{
+      max-height: 200px;
+      overflow-y: scroll;}

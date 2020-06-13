@@ -79,7 +79,13 @@ describe('EventViewComponent', () => {
     </div>
 
     <div class="col-md-4">
-      <!--member list-->
+      <app-member-list
+        *ngIf="event"
+        [eventId]="eventId"
+        [creatorId]="event._creator"
+        [members]="event.members"
+      >
+      </app-member-list>
     </div>
   </div>
 

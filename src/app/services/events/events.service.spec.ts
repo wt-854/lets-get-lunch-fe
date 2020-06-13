@@ -1,11 +1,21 @@
-import { TestBed } from '@angular/core/testing';
-
-import { EventsService } from './events.service';
-import { Event } from './event';
+import { TestBed, inject } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
+
+import { Event } from './event';
+import { EventsService } from './events.service';
+import { AuthService } from '../auth/auth.service';
+
+class MockAuthService {
+  currentUser = jasmine.createSpy('currentUser').and.callFake(() => {
+    return {
+      username: 'johndoe',
+      _id: '58dab4f21342131b8c96787f'
+    };
+  });
+}
 
 describe('EventsService', () => {
   let eventsService: EventsService;
@@ -14,7 +24,10 @@ describe('EventsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [EventsService]
+      providers: [
+        EventsService,
+        { provide: AuthService, useClass: MockAuthService }
+      ]
     });
 
     eventsService = TestBed.get(EventsService);
@@ -75,7 +88,7 @@ describe('EventsService', () => {
         endTime: undefined,
         suggestLocations: undefined
       };
-      const eventResponse = 'Event could not be created!';
+      const eventResponse = 'Event could not be created!' ;
       let errorResponse;
 
       eventsService.create(event).subscribe(res => {}, err => {
@@ -84,8 +97,9 @@ describe('EventsService', () => {
 
       http
         .expectOne('http://localhost:8080/api/events')
-        .flush({message: eventResponse}, {status: 500, statusText: 'Server Error'});
+        .flush({message: eventResponse}, {status: 500, statusText: 'Servor Error'});
       expect(errorResponse.error.message).toEqual(eventResponse);
+      http.verify();
     });
   });
 
@@ -120,7 +134,6 @@ describe('EventsService', () => {
         .flush(eventResponse);
       expect(response).toEqual(eventResponse);
       http.verify();
-
     });
 
     it('should return a 500 if an error occurs', () => {
@@ -179,7 +192,7 @@ describe('EventsService', () => {
     });
 
     it('should return a 404 for an event id that does not exist', () => {
-      const eventError = 'This event does not exist';
+      const eventError = 'This event does not exist.';
       let errorResponse;
 
       eventsService.get('1234').subscribe(res => {}, err => {
@@ -188,8 +201,9 @@ describe('EventsService', () => {
 
       http
         .expectOne('http://localhost:8080/api/events/' + '1234')
-        .flush({ message: eventError }, { status: 404, statusText: 'Not Found' });
+        .flush({message: eventError}, {status: 404, statusText: 'Not Found'});
       expect(errorResponse.error.message).toEqual(eventError);
+      http.verify();
     });
   });
 
@@ -209,16 +223,16 @@ describe('EventsService', () => {
         members: [
           '5a539449b689d341cccc4be7'
         ]
-    }];
+      }];
       let response;
 
       eventsService.all().subscribe(res => {
-      response = res;
-    });
+        response = res;
+      });
 
       http
-      .expectOne('http://localhost:8080/api/events')
-      .flush(events);
+        .expectOne('http://localhost:8080/api/events')
+        .flush(events);
       expect(response).toEqual(events);
       http.verify();
     });
@@ -233,10 +247,82 @@ describe('EventsService', () => {
 
       http
         .expectOne('http://localhost:8080/api/events')
-        .flush({ message: error }, { status: 500, statusText: 'Server Error' });
+        .flush({message: error}, {status: 500, statusText: 'Server Error'});
       expect(errorResponse.error.message).toEqual(error);
       http.verify();
     });
+  });
 
+  describe('isEventCreator', () => {
+    it('should return true if the event creator is the current user', () => {
+      const id = '58dab4f21342131b8c96787f';
+      expect(eventsService.isEventCreator(id)).toEqual(true);
+    });
+
+    it('should return false if the event creator is not the current user', () => {
+      const id = '12345';
+      expect(eventsService.isEventCreator(id)).toEqual(false);
+    });
+  });
+
+  describe('subscribe', () => {
+    it('should return an event with an updated members list', () => {
+      const eventId = '5a55135639fbc4ca3ee0ce5a';
+      const subscriber = { user: '5a539449b689d341cccc4be7' };
+      const subscribeResponse: Event = {
+        _id: '5a55135639fbc4ca3ee0ce5a',
+        _creator: '5a550ea739fbc4ca3ee0ce58',
+        title: 'My first updated event',
+        description: 'My first updated description',
+        city: 'Miami',
+        state: 'FL',
+        startTime: '2018-01-09T19:00:00.000Z',
+        endTime: '2018-01-09T20:00:00.000Z',
+        __v: 1,
+        suggestLocations: true,
+        members: [
+          {
+            _id: '5a550ea739fbc4ca3ee0ce58',
+            username: 'newUser',
+            __v: 0,
+            dietPreferences: []
+          },
+          {
+            _id: '5a539449b689d341cccc4be7',
+            username: 'adam',
+            __v: 0,
+            dietPreferences: []
+          }
+        ]
+      };
+      let response;
+
+      eventsService.subscribe(eventId, subscriber).subscribe(res => {
+        response = res;
+      });
+
+      http
+        .expectOne('http://localhost:8080/api/events/' + eventId + '/subscribe')
+        .flush(subscribeResponse);
+      expect(response).toEqual(subscribeResponse);
+      http.verify();
+    });
+
+    it('should return an error if a user cannot be subscribed to an event', () => {
+      const eventId = '5a55135639fbc4ca3ee0ce5a';
+      const subscriber = { user: '5a539449b689d341cccc4be7' };
+      const error = 'Something went wrong. Try again.';
+      let errorResponse;
+
+      eventsService.subscribe(eventId, subscriber).subscribe(res => {}, err => {
+        errorResponse = err;
+      });
+
+      http
+        .expectOne('http://localhost:8080/api/events/' + eventId + '/subscribe')
+        .flush({message: error}, {status: 500, statusText: 'Server Error'});
+      expect(errorResponse.error.message).toEqual(error);
+      http.verify();
+    });
   });
 });
