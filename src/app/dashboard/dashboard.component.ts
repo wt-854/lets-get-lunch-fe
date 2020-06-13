@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import { EventsService } from '../services/events/events.service';
 import { Event } from '../services/events/event';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +18,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -51,7 +53,7 @@ export class DashboardComponent implements OnInit {
   }
 
   eventClicked(event) {
-    // Route to event view page
+    this.router.navigate(['/event/' + event._id]);
   }
 
 }

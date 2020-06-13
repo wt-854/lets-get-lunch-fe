@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { AuthService } from '../services/auth/auth.service';
 import { EventsService } from '../services/events/events.service';
@@ -31,6 +31,10 @@ const events: Array<Event> = [{
   ]
 }];
 
+class MockRouter {
+  navigate(path) {}
+}
+
 class MockAuthService {
   currentUser = jasmine.createSpy('currentUser').and.callFake(() => currentUser);
 }
@@ -46,6 +50,8 @@ describe('DashboardComponent', () => {
   let eventsService: EventsService;
   let viewDateElement: DebugElement[];
   let calendarEventElement: DebugElement[];
+  let eventLink: DebugElement[];
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,7 +66,8 @@ describe('DashboardComponent', () => {
       set: {
         providers: [
           { provide: AuthService, useClass: MockAuthService },
-          { provide: EventsService, useClass: MockEventsService }
+          { provide: EventsService, useClass: MockEventsService },
+          { provide: Router, useClass: MockRouter }
         ]
       }
     }).compileComponents();
@@ -72,6 +79,7 @@ describe('DashboardComponent', () => {
 
     authService = fixture.debugElement.injector.get(AuthService);
     eventsService = fixture.debugElement.injector.get(EventsService);
+    router = fixture.debugElement.injector.get(Router);
     spyOn(component, 'addJSDate').and.callThrough();
     spyOn(component, 'addEventColors').and.callThrough();
 
@@ -80,6 +88,8 @@ describe('DashboardComponent', () => {
       fixture.detectChanges();
       viewDateElement = fixture.debugElement.queryAll(By.css('.toggle-view .btn-primary'));
       calendarEventElement = fixture.debugElement.queryAll(By.css('.cal-event'));
+
+      eventLink = fixture.debugElement.queryAll(By.css('.cal-event-title'));
     });
   }));
 
@@ -104,6 +114,13 @@ describe('DashboardComponent', () => {
 
   it('should display events within the current week in the calendar', () => {
     expect(calendarEventElement[0].nativeElement.textContent).toContain('My first event');
+  });
+
+  it('should navigate to the event view when an event is clicked', () => {
+    spyOn(router, 'navigate');
+    eventLink[0].nativeElement.click();
+    expect(router.navigate)
+      .toHaveBeenCalledWith(['/event/' + '5a55135639fbc4ca3ee0ce5a']);
   });
 
   describe('addJSDate', () => {
