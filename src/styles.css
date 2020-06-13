@@ -853,4 +853,7 @@
     height: 0;
     border-color: transparent;
     border-style: solid; }
-  
+
+  .comments-list{
+    max-height: 300px;
+    overflow-y: scroll;}

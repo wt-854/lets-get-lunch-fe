@@ -51,7 +51,52 @@ describe('EventViewComponent', () => {
         providers: [
           { provide: ActivatedRoute, useClass: MockActivatedRoute },
           { provide: EventsService, useClass: MockEventsService }
-        ]
+        ],
+        template: `
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div *ngIf="event">
+        <h3 class="event-name">{{ event.title }}</h3>
+        <div *ngIf="event.description">
+          <label><b>Description:</b></label>
+          <span class="description"> {{ event.description }}</span>
+        </div>
+        <div>
+          <label><b>Location:</b></label>
+          <span class="location"> {{ event.city }}, {{ event.state }}</span>
+        </div>
+        <div>
+          <label><b>Start:</b></label>
+          <span class="start"> {{ event.displayStart }}</span>
+        </div>
+        <div>
+          <label><b>End:</b></label>
+          <span class="end"> {{ event.displayEnd }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!--member list-->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!--<app-comment-create *ngIf="eventId"
+                          [eventId]="eventId">
+      </app-comment-create>-->
+    </div>
+
+    <div class="col-md-4">
+      <!--recommendations-list-->
+    </div>
+
+  </div>
+</div>
+        `
       }
     })
     .compileComponents();

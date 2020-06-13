@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     const id = this.authService.currentUser()._id;
     this.eventsService.getUserEvents(id).subscribe(res => {
-      console.log('events for user ', res);
       if (res) {
         this.events = this.addJSDate(res);
         this.events = this.addEventColors(this.events);
