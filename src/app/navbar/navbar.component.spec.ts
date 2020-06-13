@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { NavbarComponent } from './navbar.component';
 import { AuthService } from '../services/auth/auth.service';
-import { By } from '@angular/platform-browser';
 
 class MockRouter {
   navigate(path) {}
@@ -28,7 +28,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ NavbarComponent ],
       providers: [
-        { provide: AuthService, useClass: MockAuthService },
+        { provide: AuthService, useClass:  MockAuthService },
         { provide: Router, useClass: MockRouter }
       ]
     })
@@ -40,7 +40,6 @@ describe('NavbarComponent', () => {
     component = fixture.componentInstance;
     authService = fixture.debugElement.injector.get(AuthService);
     router = fixture.debugElement.injector.get(Router);
-    // fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -50,7 +49,7 @@ describe('NavbarComponent', () => {
   describe('with a user who is logged in', () => {
     beforeEach(() => {
       authService.isLoggedIn = jasmine.createSpy('isLoggedIn')
-                                .and.returnValue(true);
+                                      .and.returnValue(true);
       fixture.detectChanges();
     });
 
@@ -62,6 +61,11 @@ describe('NavbarComponent', () => {
     it('should have a link to the dashboard when clicking the brand name', () => {
       const link = fixture.debugElement.query(By.css('.navbar-brand'));
       expect(link.attributes.routerLink).toEqual('/dashboard');
+    });
+
+    it('should have a link to view all events', () => {
+      const link = fixture.debugElement.query(By.css('[data-test=events]'));
+      expect(link.attributes.routerLink).toEqual('/events');
     });
 
     it('should have a link to logout visible', () => {
@@ -80,7 +84,7 @@ describe('NavbarComponent', () => {
   describe('with a user who is not logged in', () => {
     beforeEach(() => {
       authService.isLoggedIn = jasmine.createSpy('isLoggedIn')
-                                .and.returnValue(false);
+                                      .and.returnValue(false);
       fixture.detectChanges();
     });
 
@@ -104,5 +108,4 @@ describe('NavbarComponent', () => {
       expect(link.attributes.routerLink).toEqual('/login');
     });
   });
-
 });

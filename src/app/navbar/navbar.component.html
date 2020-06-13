@@ -2,7 +2,6 @@
     <div class="container">
   
       <div class="navbar-header">
- 
         <a *ngIf="!isLoggedIn"
            class="navbar-brand"
            routerLink="">Let's Get Lunch</a>
@@ -19,7 +18,9 @@
           <li *ngIf="!isLoggedIn">
             <a class="nav-link" data-test="login" routerLink="/login">Login</a>
           </li>
-  
+          <li *ngIf="isLoggedIn">
+            <a class="nav-link" data-test="events" routerLink="/events">Events</a>
+          </li>  
           <li *ngIf="isLoggedIn">
             <a class="nav-link" data-test="logout" routerLink="" (click)="logout()">Logout</a>
           </li>
