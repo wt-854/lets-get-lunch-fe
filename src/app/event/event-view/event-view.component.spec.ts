@@ -7,6 +7,7 @@ import { EventViewComponent } from './event-view.component';
 import { EventModule } from '../event.module';
 import { EventsService } from '../../services/events/events.service';
 import { Event } from '../../services/events/event';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const event: Event = {
   _id: '5a55135639fbc4ca3ee0ce5a',
@@ -35,6 +36,8 @@ class MockActivatedRoute {
 
 class MockEventsService {
   get = jasmine.createSpy('get').and.callFake(() => of(event));
+
+  isEventCreator() {}
 }
 
 describe('EventViewComponent', () => {
@@ -44,7 +47,10 @@ describe('EventViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ EventModule]
+      imports: [
+        EventModule,
+        RouterTestingModule
+      ]
     })
     .overrideComponent(EventViewComponent, {
       set: {
@@ -59,6 +65,7 @@ describe('EventViewComponent', () => {
     <div class="col-md-8">
       <div *ngIf="event">
         <h3 class="event-name">{{ event.title }}</h3>
+        <a class="event-edit" *ngIf="isCreator" [routerLink]="['/event', eventId, 'update']">Edit</a>
         <div *ngIf="event.description">
           <label><b>Description:</b></label>
           <span class="description"> {{ event.description }}</span>
@@ -127,4 +134,21 @@ describe('EventViewComponent', () => {
   it('should initialize with a call to get the event details using the active route id', () => {
     expect(eventsService.get).toHaveBeenCalledWith('5a55135639fbc4ca3ee0ce5a');
   });
+
+  it('should contain a link to update the event if the current user is the event creator', () => {
+    component.isCreator = true;
+    fixture.detectChanges();
+    const updateLink = fixture.debugElement
+                              .query(By.css('.event-edit'))
+                              .nativeElement.getAttribute('href');
+    expect(updateLink).toEqual('/event/5a55135639fbc4ca3ee0ce5a/update');
+  });
+
+  it('should hide a link to update the event if the current user is not the event creator', () => {
+    component.isCreator = false;
+    fixture.detectChanges();
+    const updateLink = fixture.debugElement.query(By.css('.event-edit'));
+    expect(updateLink).toBeNull();
+  });
+
 });

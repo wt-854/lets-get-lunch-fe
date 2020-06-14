@@ -865,3 +865,9 @@
   .recommendations-container ul {
     max-height: 300px;
     overflow-y: scroll;}
+
+  .event-name {
+    display: inline-block;}
+
+  .event-edit {
+    margin-left: 15px;}

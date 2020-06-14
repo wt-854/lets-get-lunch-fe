@@ -50,4 +50,10 @@ export class EventsService {
     return this.http.patch<Event>('http://localhost:8080/api/events/' +
       eventId + '/subscribe', user);
   }
+
+  update(event: Event): Observable<Event> {
+    return this.http.patch<Event>('http://localhost:8080/api/events/'
+      + event._id, event);
+  }
+
 }
