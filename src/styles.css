@@ -861,3 +861,7 @@
   .member-list{
       max-height: 200px;
       overflow-y: scroll;}
+  
+  .recommendations-container ul {
+    max-height: 300px;
+    overflow-y: scroll;}
