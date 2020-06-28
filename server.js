@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+var cors = require('cors');
+
+app.use(cors());
 
 // If an incoming request uses a protocol other than HTTPS, 
 // redirect that request to the same url but with HTTPS
