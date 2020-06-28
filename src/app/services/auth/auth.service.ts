@@ -4,11 +4,13 @@ import { Observable, pipe } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { User } from './user';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  API = environment.api;
   @Output() loggedIn: EventEmitter<boolean>;
 
   constructor(
@@ -19,13 +21,13 @@ export class AuthService {
   }
 
   signup(credentials: User): Observable<object> {
-    return this.http.post('http://localhost:8080/api/users', credentials).pipe(
+    return this.http.post(this.API + '/users', credentials).pipe(
       mergeMap(res => this.login(credentials))
     );
   }
 
   login(credentials: User): Observable<object> {
-    return this.http.post('http://localhost:8080/api/sessions', credentials).pipe(
+    return this.http.post(this.API + '/sessions', credentials).pipe(
       map((res: any) => {
         localStorage.setItem('Authorization', res.token);
         this.loggedIn.emit(true);

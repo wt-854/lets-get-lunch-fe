@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  googleMaps: 'AIzaSyCmI2yCjeaVkDUeyYH5AjkbAzpnlNvW6aQ'
+  googleMaps: 'AIzaSyCmI2yCjeaVkDUeyYH5AjkbAzpnlNvW6aQ',
+  api: 'http://localhost:8080/api'
 };
 
 /*
