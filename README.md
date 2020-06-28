@@ -53,7 +53,7 @@ Run `./node_modules/.bin/cypress open` to execute the end-to-end tests via [Cypr
 ![](images/event-on-dashboard.png)
 
 ## List of Events
-![](images/event-details.png)
+![](images/event-list.png)
 
 ## Event Details
 ![](images/event-details.png)
