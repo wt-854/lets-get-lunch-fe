@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2. Demo <strong>[here](https://lets-get-lunch-fe-wt854.herokuapp.com/)</strong>.
 
 ## About
-This project is an event and restaurant recommendation web app. A user can create events, which will display recommended restaurant applications based on his/her dietary preferences. Other users can subscribe to the event(s) as well as make comments. Screenshots of the application are at the end of the readme. 
+This project is an event and restaurant recommendation web app. A user can create events, which will display recommended restaurant applications using [Zomato's API](https://developers.zomato.com/api) based on his/her dietary preferences. Other users can subscribe to the event(s) as well as make comments. Screenshots of the application are at the end of the readme. 
 
 ## Credits
 Credits to [Adam Morgan](https://github.com/atom-morgan) for his [Angular tutorial](https://github.com/theangulartutorial). 
@@ -40,7 +40,7 @@ Run `./node_modules/.bin/cypress open` to execute the end-to-end tests via [Cypr
 ![](images/dashboard.png)
 
 ## Create Event
-#### Autocomplete location using Google Map's Maps Javascript API and Places API. 
+#### Autocomplete location using Google Map's [Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) and [Places API](https://developers.google.com/places/web-service/intro). 
 ![](images/event-autocomplete.png)
 
 #### Calendar
