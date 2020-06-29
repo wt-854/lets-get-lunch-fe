@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2. Demo <strong>[here](https://lets-get-lunch-fe-wt854.herokuapp.com/)</strong>.
 
 ## About
-This project is an event and restaurant recommendation web app. A user can create events, which will display recommended restaurant applications using [Zomato's API](https://developers.zomato.com/api) based on his/her dietary preferences. Other users can subscribe to the event(s) as well as make comments. Screenshots of the application are at the end of the readme. 
+This project is an event and restaurant recommendation web app. A user can create events, which will display recommended restaurant applications using [Zomato's API](https://developers.zomato.com/api) based on his/her dietary preferences. Other users can subscribe to the event(s) as well as make comments. Screenshots of the application are at the end of the readme. A test-driven development approach was used when building this project. 
 
 ## Credits
 Credits to [Adam Morgan](https://github.com/atom-morgan) for his [Angular tutorial](https://github.com/theangulartutorial). 
